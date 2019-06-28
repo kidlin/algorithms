@@ -4,10 +4,6 @@ project(algorithms)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/include)
-
-add_library(LA SHARED
-        ${PROJECT_SOURCE_DIR}/src/sort.cpp)
+        ${PROJECT_SOURCE_DIR}/src)
 
 add_executable(testAll main.cpp)
-target_link_libraries(testAll LA)
