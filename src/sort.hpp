@@ -103,6 +103,24 @@ public:
 
     template <typename T>
     static void selectionSort(std::vector<T>& inputArray){
+        if(inputArray.size()<2)
+            return;
+
+        for(int i=0;i<inputArray.size();++i){
+            T min=inputArray[i];
+            int min_index=i;
+            for(int j=i+1;j<inputArray.size();++j){
+                if(inputArray[j]<min){
+                    min=inputArray[j];
+                    min_index=j;
+                }
+            }
+            if(min_index!=i){
+                T temp=inputArray[i];
+                inputArray[i]=min;
+                inputArray[min_index]=temp;
+            }
+        }
 
     }
 };

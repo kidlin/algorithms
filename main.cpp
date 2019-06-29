@@ -72,6 +72,19 @@ void testSort(){
     }
     cout<<"bubbleSort done!"<<endl;
 
+    //testing selectionSort
+    vector<vector<int>> test4=tests;
+    for(int i=0;i<numArray.size();++i){
+        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+        Sort::selectionSort(test4[i]);
+        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+        time[4][i]=t_track;
+        if(test4[i]!=test0[i])
+            cerr<<"Selection sort error!!!!"<<endl;
+    }
+    cout<<"selectionSort done!"<<endl;
+
     //compare results
     cout<<"\nExecution time"<<endl;
     cout<<"methods ";
@@ -89,6 +102,9 @@ void testSort(){
     cout<<"\nBubble ";
     for(int i=0;i<numArray.size();++i)
         cout<<time[3][i]<<" ";
+    cout<<"\nSelection ";
+    for(int i=0;i<numArray.size();++i)
+        cout<<time[4][i]<<" ";
 
 }
 
