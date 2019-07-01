@@ -66,7 +66,9 @@ public:
 
     template <typename T>
     static void quickSort(std::vector<T>& inputArray){
-
+        if(inputArray.size()<2)
+            return;
+        quickSort3(inputArray,0,inputArray.size()-1);
     }
 
     template <typename T>
@@ -122,6 +124,56 @@ public:
             }
         }
 
+    }
+
+    //////////////////////private functions//////////////////////////////
+    template <typename T>
+    static void quickSort3(std::vector<T>& inputArray,int start, int end){
+        if(end-start<1)
+            return;
+
+        if(end-start>2){
+            T mid=medianValue(inputArray,start,end);
+            int i=start;
+            int j=end-1;
+            while(true){
+                while(inputArray[++i]<mid){}
+                while(inputArray[--j]>mid){}
+                if(i<j)
+                    swap(inputArray,i,j);
+                else
+                    break;
+            }
+            swap(inputArray,i,end-1);
+
+            quickSort3(inputArray,start,i-1);
+            quickSort3(inputArray,i+1,end);
+        }
+        else
+            medianValue(inputArray,start,end);
+    }
+
+    template <typename T>
+    static T medianValue(std::vector<T>& inputArray,int start, int end){
+        int median=(start+end)/2;
+
+        if(inputArray[start]>inputArray[end])
+            swap(inputArray,start,end);
+        if(inputArray[start]>inputArray[median])
+            swap(inputArray,start,median);
+        if(inputArray[median]>inputArray[end])
+            swap(inputArray,median,end);
+
+        swap(inputArray,median,end-1);
+
+        return inputArray[end-1];
+    }
+
+    template <typename T>
+    static void swap(std::vector<T>& inputArray,int p1, int p2){
+        T temp=inputArray[p1];
+        inputArray[p1]=inputArray[p2];
+        inputArray[p2]=temp;
     }
 };
 
