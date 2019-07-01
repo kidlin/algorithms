@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
+#include <thread>
 #include <sort.hpp>
 
 using namespace std;
@@ -31,74 +32,6 @@ void testSort(){
         double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
         time[0][i]=t_track;
     }
-    cout<<"std done!"<<endl;
-
-    //testing InsertSort
-    vector<vector<int>> test1=tests;
-    for(int i=0;i<numArray.size();++i){
-        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-        Sort::insertionSort(test1[i]);
-        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-        time[1][i]=t_track;
-        if(test1[i]!=test0[i])
-            cerr<<"Insertion sort error!!!!"<<endl;
-    }
-    cout<<"insertion done!"<<endl;
-
-    //testing binarySort
-    vector<vector<int>> test2=tests;
-    for(int i=0;i<numArray.size();++i){
-        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-        Sort::binarySort(test2[i]);
-        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-        time[2][i]=t_track;
-        if(test2[i]!=test0[i])
-            cerr<<"Binary sort error!!!!"<<endl;
-    }
-    cout<<"binarySort done!"<<endl;
-
-    //testing bubbleSort
-    vector<vector<int>> test3=tests;
-    for(int i=0;i<numArray.size();++i){
-        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-        Sort::bubbleSort(test3[i]);
-        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-        time[3][i]=t_track;
-        if(test3[i]!=test0[i])
-            cerr<<"Bubble sort error!!!!"<<endl;
-    }
-    cout<<"bubbleSort done!"<<endl;
-
-    //testing selectionSort
-    vector<vector<int>> test4=tests;
-    for(int i=0;i<numArray.size();++i){
-        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-        Sort::selectionSort(test4[i]);
-        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-        time[4][i]=t_track;
-        if(test4[i]!=test0[i])
-            cerr<<"Selection sort error!!!!"<<endl;
-    }
-    cout<<"selectionSort done!"<<endl;
-
-    //testing quickSort
-    vector<vector<int>> test5=tests;
-    for(int i=0;i<numArray.size();++i){
-        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-        Sort::quickSort(test5[i]);
-        std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-        double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
-        time[5][i]=t_track;
-        if(test5[i]!=test0[i])
-            cerr<<"Quick sort error!!!!"<<endl;
-    }
-    cout<<"quickSort done!"<<endl;
-
-    //compare results
     cout<<"\nExecution time"<<endl;
     cout<<"methods ";
     for(int i : numArray)
@@ -106,21 +39,116 @@ void testSort(){
     cout<<"\nstd ";
     for(int i=0;i<numArray.size();++i)
         cout<<time[0][i]<<" ";
-    cout<<"\ninsertion ";
-    for(int i=0;i<numArray.size();++i)
-        cout<<time[1][i]<<" ";
-    cout<<"\nBinary ";
-    for(int i=0;i<numArray.size();++i)
-        cout<<time[2][i]<<" ";
-    cout<<"\nBubble ";
-    for(int i=0;i<numArray.size();++i)
-        cout<<time[3][i]<<" ";
-    cout<<"\nSelection ";
-    for(int i=0;i<numArray.size();++i)
-        cout<<time[4][i]<<" ";
-    cout<<"\nQuick ";
-    for(int i=0;i<numArray.size();++i)
-        cout<<time[5][i]<<" ";
+
+    //testing InsertSort
+    thread runInsertSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::insertionSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[1][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Insertion sort error!!!!"<<endl;
+        }
+        cout<<"\ninsertion ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[1][i]<<" ";
+    });
+
+    //testing binarySort
+    thread runBinarySort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::binarySort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[2][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Binary sort error!!!!"<<endl;
+        }
+        cout<<"\nBinary ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[2][i]<<" ";
+    });
+
+    //testing bubbleSort
+    thread runBubbleSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::bubbleSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[3][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Bubble sort error!!!!"<<endl;
+        }
+        cout<<"\nBubble ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[3][i]<<" ";
+    });
+
+    //testing selectionSort
+    thread runSelectionSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::selectionSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[4][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Selection sort error!!!!"<<endl;
+        }
+        cout<<"\nSelection ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[4][i]<<" ";
+    });
+
+    //testing quickSort
+    thread runQuickSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::quickSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[5][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Quick sort error!!!!"<<endl;
+        }
+        cout<<"\nQuick ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[5][i]<<" ";
+    });
+
+    //testing heapSort
+    thread runHeapSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::quickSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[6][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Heap sort error!!!!"<<endl;
+        }
+        cout<<"\nHeap ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[6][i]<<" ";
+    });
+
+    //wait all thread exit
+    runQuickSort.join();
+    runHeapSort.join();
+    runBinarySort.join();
+    runInsertSort.join();
+    runSelectionSort.join();
+    runBubbleSort.join();
 
 }
 

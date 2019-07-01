@@ -100,7 +100,18 @@ public:
 
     template <typename T>
     static void heapSort(std::vector<T>& inputArray){
+        if(inputArray.size()<2)
+            return;
 
+        int N=inputArray.size();
+        for(int i=N/2; i>=0;--i){
+            percolateDown(inputArray,i,N);
+        }
+
+        for(int i=N-1;i>=0;--i){
+            swap(inputArray,0,i);
+            percolateDown(inputArray,0,i);
+        }
     }
 
     template <typename T>
@@ -175,6 +186,23 @@ public:
         inputArray[p1]=inputArray[p2];
         inputArray[p2]=temp;
     }
+
+    template <typename T>
+    static void percolateDown(std::vector<T>& inputArray, int i, int N){
+        int child;
+        T temp;
+        for(temp=inputArray[i];i<N;i=child){
+            child=inputArray[2*i+1];
+            if(child!=N-1&&inputArray[child+1]>inputArray[child])
+                child++;
+            if(temp<inputArray[child])
+                inputArray[i]=inputArray[child];
+            else
+                break;
+        }
+        inputArray[i]=temp;
+    }
+
 };
 
 #endif //ALGORITHMS_SORT_HPP
