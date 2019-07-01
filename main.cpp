@@ -158,11 +158,28 @@ void testSort(){
         for(int i=0;i<numArray.size();++i)
             cout<<time[7][i]<<" ";
     });
+    //testing shellSort
+    thread runShellSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::shellSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[8][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Shell sort error!!!!"<<endl;
+        }
+        cout<<"\nShell ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[8][i]<<" ";
+    });
 
     //wait all thread exit
     runQuickSort.join();
     runHeapSort.join();
     runMergeSort.join();
+    runShellSort.join();
     runBinarySort.join();
     runInsertSort.join();
     runSelectionSort.join();

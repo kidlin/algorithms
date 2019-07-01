@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <cstring>
+#include <cmath>
 
 class Sort{
 public:
@@ -99,7 +100,62 @@ public:
 
     template <typename T>
     static void shellSort(std::vector<T>& inputArray){
+        if(inputArray.size()<2)
+            return;
+        //Sedgewick increments: 1,5,19,41,109,...
+        //j=4^i-3*2^i+1 or j=9*4^i-9*2^i+1
+        std::vector<int> increments[3];
+        int N=inputArray.size();
+        for(int i=0;;++i){
+            int j=(int)(pow(4,i)-3*pow(2,i)+1);
+            if(j>0&&j<N)
+                increments[0].push_back(j);
+            else if(j>=N)
+                break;
+        }
+        for(int i=0;;++i){
+            int j=(int)(9*pow(4,i)-9*pow(2,i)+1);
+            if(j>0&&j<N)
+                increments[1].push_back(j);
+            else if(j>=N)
+                break;
+        }
+        increments[2].resize(increments[0].size()+increments[1].size());
+        int left=0,right=0;
+        int N2=increments[2].size();
+        for(int i=0;i<N2;++i){
+            if(increments[0][left]>increments[1][right]){
+                increments[2][i]=inputArray[left++];
+            }
+            else{
+                increments[2][i]=inputArray[right++];
+            }
+            if(left==increments[0].size()){
+                memcpy(increments[2].data()+i+1,increments[1].data()+right, sizeof(int)*(N2-1-i));
+                break;
+            }
+            if(right==increments[1].size()){
+                memcpy(increments[2].data()+i+1,increments[0].data()+left, sizeof(int)*(N2-1-i));
+                break;
+            }
+        }
 
+        //sort
+        for(int k=N2-1;k>=0;--k){
+            int increment=increments[2][k];
+            for(int i=increment;i<inputArray.size();i+=increment){
+                T temp=inputArray[i];
+                int j;
+                for(j=i;j>=increment;j-=increment){
+                    if(inputArray[j-increment]>temp){
+                        inputArray[j]=inputArray[j-increment];
+                    }
+                    else
+                        break;
+                }
+                inputArray[j]=temp;
+            }
+        }
     }
 
     template <typename T>
