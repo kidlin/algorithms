@@ -142,9 +142,27 @@ void testSort(){
             cout<<time[6][i]<<" ";
     });
 
+    //testing mergeSort
+    thread runMergeSort([&](){
+        vector<vector<int>> test=tests;
+        for(int i=0;i<numArray.size();++i){
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+            Sort::mergeSort(test[i]);
+            std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+            double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
+            time[7][i]=t_track;
+            if(test[i]!=test0[i])
+                cerr<<"Merge sort error!!!!"<<endl;
+        }
+        cout<<"\nMerge ";
+        for(int i=0;i<numArray.size();++i)
+            cout<<time[7][i]<<" ";
+    });
+
     //wait all thread exit
     runQuickSort.join();
     runHeapSort.join();
+    runMergeSort.join();
     runBinarySort.join();
     runInsertSort.join();
     runSelectionSort.join();

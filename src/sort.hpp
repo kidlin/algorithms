@@ -73,7 +73,11 @@ public:
 
     template <typename T>
     static void mergeSort(std::vector<T>& inputArray){
-
+        if(inputArray.size()<2)
+            return;
+        int N=inputArray.size();
+        auto temp=inputArray;
+        mSort(inputArray,temp,0,N-1);
     }
 
     template <typename T>
@@ -201,6 +205,44 @@ public:
                 break;
         }
         inputArray[i]=temp;
+    }
+
+    template <typename T>
+    static void mSort(std::vector<T>& inputArray,std::vector<T>& tempArray, int start, int end){
+        if(start<end){
+            int mid=(start+end)/2;
+            mSort(inputArray,tempArray,start,mid);
+            mSort(inputArray,tempArray,mid+1,end);
+            merge(inputArray,tempArray,start,mid+1,end);
+        }
+    }
+
+    template <typename T>
+    static void merge(std::vector<T>& inputArray,std::vector<T>& tempArray,int start, int mid, int end){
+        int left=start;
+        int right=mid;
+
+        int N=end-start+1;
+
+        for(int i=0;i<N;++i){
+            if(inputArray[left]<inputArray[right]){
+                tempArray[start+i]=inputArray[left++];
+            }
+            else{
+                tempArray[start+i]=inputArray[right++];
+            }
+            if(left>=mid){
+                memcpy(tempArray.data()+start+i+1,inputArray.data()+right, sizeof(T)*(N-i-1));
+                break;
+            }
+            if(right>end){
+                memcpy(tempArray.data()+start+i+1,inputArray.data()+left, sizeof(T)*(N-i-1));
+                break;
+            }
+        }
+
+        for(int i=start;i<=end;++i)
+            inputArray[i]=tempArray[i];
     }
 
 };
