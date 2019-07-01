@@ -191,8 +191,8 @@ public:
     static void percolateDown(std::vector<T>& inputArray, int i, int N){
         int child;
         T temp;
-        for(temp=inputArray[i];i<N;i=child){
-            child=inputArray[2*i+1];
+        for(temp=inputArray[i];2*i+1<N;i=child){
+            child=2*i+1;
             if(child!=N-1&&inputArray[child+1]>inputArray[child])
                 child++;
             if(temp<inputArray[child])

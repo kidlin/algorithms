@@ -130,7 +130,7 @@ void testSort(){
         vector<vector<int>> test=tests;
         for(int i=0;i<numArray.size();++i){
             std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-            Sort::quickSort(test[i]);
+            Sort::heapSort(test[i]);
             std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
             double t_track= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
             time[6][i]=t_track;
